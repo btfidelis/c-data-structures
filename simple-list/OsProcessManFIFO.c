@@ -56,8 +56,7 @@ process* new_process(char* name, int cpu_cycles, p_control* con)
     if (!con->initial) {
         con->initial = ps;
     } else {
-        last_process = get_last_process(con->initial);
-        last_process->next = ps;
+        con->end_p->next = ps;
     }
 
     con->end_p = ps;
