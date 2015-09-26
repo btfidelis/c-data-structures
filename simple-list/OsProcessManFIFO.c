@@ -11,36 +11,20 @@ typedef struct Process
     struct Process* next;
 }process;
 
-process* new_process(char* name, int cpu_cycles);
+process* new_process(char* name, int cpu_cycles, p_control* con);
 void print_processes(process* init);
 void execute(process* p);
+process* get_last_process(process* init);
 
 int main()
 {
     p_control* processControlBlock = new_process_control_block();
     process* curr;
 
-    curr = new_process("process-1", 12);
-    processControlBlock->initial = curr;
-    processControlBlock->many++;
-
-    curr->next = new_process("process-2", 5);
-    curr = curr->next;
-
-    processControlBlock->end_p = curr;
-    processControlBlock->many++;
-
-    curr->next = new_process("process-3", 16);
-    curr = curr->next;
-
-    processControlBlock->end_p = curr;
-    processControlBlock->many++;
-
-    curr->next = new_process("process-4", 3);
-    curr = curr->next;
-
-    processControlBlock->end_p = curr;
-    processControlBlock->many++;
+    new_process("process-1", 12, processControlBlock);
+    new_process("process-2", 5,  processControlBlock);
+    new_process("process-3", 16, processControlBlock);
+    new_process("process-4", 3,  processControlBlock);
 
 
     print_processes(processControlBlock->initial);
@@ -50,26 +34,36 @@ int main()
     curr = processControlBlock->initial;
 
     while(curr) {
-
         execute(curr);
         printf("\n");
-
         curr = curr->next;
     }
-
-
 
     return 0;
 }
 
-process* new_process(char* name, int cpu_cycles)
+process* new_process(char* name, int cpu_cycles, p_control* con)
 {
     process* ps = (process*) malloc(sizeof(process));
+    process* last_process;
 
     ps->name = name;
     ps->cpu_cycles = cpu_cycles;
 
     ps->next = NULL;
+
+
+    if (!con->initial) {
+        con->initial = ps;
+    } else {
+        last_process = get_last_process(con->initial);
+        last_process->next = ps;
+    }
+
+    con->end_p = ps;
+    con->many++;
+    return ps;
+
 }
 
 void print_processes(process* init)
@@ -95,4 +89,15 @@ void execute(struct Process* p)
     }
 
     printf("\n");
+}
+
+process* get_last_process(process* init)
+{
+    process* it = init;
+
+    while(it->next) {
+        it = it->next;
+    }
+
+    return it;
 }
