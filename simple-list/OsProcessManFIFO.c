@@ -14,7 +14,6 @@ typedef struct Process
 process* new_process(char* name, int cpu_cycles, p_control* con);
 void print_processes(process* init);
 void execute(process* p);
-process* get_last_process(process* init);
 
 int main()
 {
@@ -88,15 +87,4 @@ void execute(struct Process* p)
     }
 
     printf("\n");
-}
-
-process* get_last_process(process* init)
-{
-    process* it = init;
-
-    while(it->next) {
-        it = it->next;
-    }
-
-    return it;
 }
