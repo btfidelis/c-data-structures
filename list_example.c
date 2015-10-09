@@ -15,14 +15,16 @@ list* new_element(int id);
 int main()
 {
     list* init = NULL;
-
+    
+    // On a list you add elements on one side 
     enqueue(&init, new_element(21));
     enqueue(&init, new_element(39));
     enqueue(&init, new_element(7));
     enqueue(&init, new_element(90));
 
     print_list(init);
-
+    
+    // ... and remove the element on the opposite side
     list* removed = dequeue(&init);
     printf("\nREMOVED ELEMENT: %d", removed->id);
     free(removed);
