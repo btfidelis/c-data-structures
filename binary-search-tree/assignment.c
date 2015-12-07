@@ -18,11 +18,13 @@ typedef struct ListaAleatoria
 arv* new_arv(int valor);
 void inserir(arv* a, arv** raiz);
 void erd_arv(arv* raiz);
+arv * busca_valor(arv* raiz, int valor);
 random_list* gerar_lista_aleatoria(int n, random_list** r);
 random_list* new_random(int n);
 void inserir_lista(random_list** init, random_list* element);
 random_list* ordenar_lista(random_list** init_rand, arv** raiz);
 void free_list(random_list** init);
+void free_arv(arv* init);
 random_list* dequeue(random_list** init);
 void lista_para_arvore(random_list* init, arv** raiz);
 void print_list(random_list* init);
@@ -39,6 +41,13 @@ int main()
     ord_list = ordenar_lista(&lista_aleatoria, &r);
     print_list(ord_list);
 
+    arv* r_busca = NULL;
+
+    lista_para_arvore(ord_list, &r_busca);
+    arv* busca = busca_valor(r, 12);
+
+    if (busca)
+    printf("Arvore encontrada %d", busca->valor);
     //free_list(&lista_aleatoria);
 
     //erd_arv(r);
@@ -167,7 +176,48 @@ random_list* ordenar_lista(random_list** init_rand, arv** raiz)
 
     arv_para_lista(*raiz, &ordenada);
 
+    free_arv(*raiz);
+
     return ordenada;
+}
+
+arv * busca_valor(arv* raiz, int valor)
+{
+
+    if (raiz != NULL) 
+    {
+        if(raiz->valor == valor)
+        {
+            return raiz;
+        }
+        else
+        {
+
+            if(raiz->valor > valor)
+            {
+                busca_valor(raiz->esq, valor);
+            }
+            else
+            {
+                busca_valor(raiz->dir, valor);
+            }
+        }
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void free_arv(arv* init)
+{
+    if (init == NULL) {
+        return;
+    }
+
+    free_arv(init->esq);
+    free_arv(init->dir);
+    free(init);
 }
 
 void free_list(random_list** init)
