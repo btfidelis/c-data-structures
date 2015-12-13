@@ -76,7 +76,7 @@ void print_processes(process* init)
     }
 }
 
-void execute(struct Process* p)
+void execute(process* p, int quantum)
 {
     int i;
 
